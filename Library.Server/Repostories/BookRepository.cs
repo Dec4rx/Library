@@ -1,0 +1,87 @@
+﻿using Library.Server.Models;
+using Library.Server.Models.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace Library.Server.Repostories
+{
+    public class BookRepository : IBookRepository
+    {
+        private readonly LibraryDbContext _dbContext;
+
+        public BookRepository(LibraryDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+
+        public async Task<ActionResult> AddAsync(Book book)
+        {
+            var errors = new Dictionary<string, List<string>>();
+            // Check if the ISBN already exists in the database
+            var existingBook = await _dbContext.Books.FirstOrDefaultAsync(b => b.Isbn == book.Isbn);
+            if (existingBook != null)
+            {
+                errors["Isbn"] = new List<string> { "The book with the same ISBN already exists in the database" };
+                return new BadRequestObjectResult(new { errors });
+            }
+
+            _dbContext.Books.Add(book);
+            await _dbContext.SaveChangesAsync();
+            return new StatusCodeResult(201);
+        }
+
+
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            var book = await _dbContext.Books.FindAsync(id);
+            if (book == null)
+            {
+                return new NotFoundResult();
+            }
+
+            _dbContext.Books.Remove(book);
+            await _dbContext.SaveChangesAsync();
+            return new OkResult();
+        }
+
+        public async Task<ActionResult<IEnumerable<Book>>> GetAllAsync()
+        {
+            var books = await _dbContext.Books.ToListAsync();
+            return new ActionResult<IEnumerable<Book>>(books);
+        }
+
+        public async Task<ActionResult<Book>> GetByIdAsync(int id)
+        {
+            var book = await _dbContext.Books.FindAsync(id);
+            if (book == null)
+            {
+                return new NotFoundResult();
+            }
+
+            return new ActionResult<Book>(book);
+        }
+
+        public async Task<ActionResult<Book>> UpdateAsync(int id, BookDTO bookDTO)
+        {
+            var book = await _dbContext.Books.FindAsync(id);
+
+            if (book == null)
+            {
+                return new NotFoundResult();
+            }
+
+            // Update only the properties that are provided in the updatedBook object
+            book.Isbn = bookDTO.Isbn ?? book.Isbn;
+            book.Title = bookDTO.Title ?? book.Title;
+            book.Author = bookDTO.Author ?? book.Author;
+            book.Genre = bookDTO.Genre ?? book.Genre;
+            book.Year = bookDTO.Year  ?? book.Year;
+            book.Description = bookDTO.Description ?? book.Description;
+            book.Pages = bookDTO.Pages ?? book.Pages;
+
+            await _dbContext.SaveChangesAsync();
+            return new ActionResult<Book>(book);
+        }
+    }
+}
