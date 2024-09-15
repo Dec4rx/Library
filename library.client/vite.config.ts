@@ -46,6 +46,10 @@ export default defineConfig({
             '^/weatherforecast': {
                 target,
                 secure: false
+            },
+            '^/api/book': {  // Entry to the BookController
+                target,
+                secure: false
             }
         },
         port: 5173,
