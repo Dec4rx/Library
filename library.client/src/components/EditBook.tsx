@@ -111,7 +111,7 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
                         onChange={(e) => setBook({ ...book!, pages: Number(e.target.value) })}
                     />
                 </label>
-                <button type="submit">Update</button>
+                <button type="submit" className="primary">Update</button>
             </form>
         </div>
     );

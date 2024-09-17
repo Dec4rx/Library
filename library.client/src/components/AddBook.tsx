@@ -18,17 +18,18 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(book),
-            }).then((response) => response.json());
-
+            });
+    
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(`Network response was not ok. Status: ${response.status}`);
             }
-            console.log('Added new book');
+    
             handleGetBooks(); // Refresh the book list
         } catch (err) {
             console.error('Failed to add book', err);
         }
     };
+    
 
 
     return (
@@ -115,7 +116,7 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                         onChange={(e) => setBook({ ...book!, pages: Number(e.target.value) })}
                     />
                 </label>
-                <button type="submit">Add</button>
+                <button type="submit" className="primary">Add</button>
             </form>
         </div>
     );
