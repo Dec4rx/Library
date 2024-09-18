@@ -7,7 +7,7 @@ const Layout: React.FC = () => {
     <div className="d-flex flex-column min-vh-100">
       <header className="">
         <div className="container">
-          <h1 className="display-4">Biblioteca Digital</h1>
+          <h1 className="display-4">Digital Library</h1>
         </div>
       </header>
       <main className="flex-grow-1">

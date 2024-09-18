@@ -1,5 +1,6 @@
 import { BookInput } from '../types/Books';
 import { useState } from 'react';
+import Modal from './Modal';
 
 interface EditBookProps {
     handleGetBooks: () => Promise<void>;
@@ -8,9 +9,10 @@ interface EditBookProps {
 
 const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
     const [book, setBook] = useState<BookInput>();
-    
+    const [errors, setErrors] = useState<any>({});
+    const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+
     const handleAddBook = async (book: BookInput) => {
-        console.log('Adding new book:', book);
         try {
             const response = await fetch('api/book', {
                 method: 'POST',
@@ -19,17 +21,21 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                 },
                 body: JSON.stringify(book),
             });
-    
+
             if (!response.ok) {
-                throw new Error(`Network response was not ok. Status: ${response.status}`);
+                const responseData = await response.json();
+                if (responseData.errors) {
+                    setErrors(responseData.errors);
+                }
+                throw new Error(`Network response was not ok. Status: ${await response.json()}`);
             }
-    
+
             handleGetBooks(); // Refresh the book list
         } catch (err) {
             console.error('Failed to add book', err);
         }
     };
-    
+
 
 
     return (
@@ -40,9 +46,21 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                     if (book) {
                         handleAddBook(book);
                     }
+                    if (Object.keys(errors).length > 0 ) {
+                        setIsAddModalOpen(true);
+                    }
                 }}
             >
-                 <label>
+                <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
+                    <div className="error-messages">
+                        {Object.entries(errors).map(([field, errorMessages]) => (
+                            <div key={field}>
+                                <strong>{field}:</strong> {(errorMessages as string[]).join(', ')}
+                            </div>
+                        ))}
+                    </div>
+                </Modal>
+                <label>
                     Title:
                     <input
                         type="text"

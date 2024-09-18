@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { Book } from '../types/Books';
+import Modal from './Modal';
 
 interface EditBookProps {
     handleGetBooks: () => Promise<void>;
@@ -8,6 +10,9 @@ interface EditBookProps {
 
 const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
     const [book, setBook] = bookState;
+    const [errors, setErrors] = useState<any>({});
+    const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+    
     const handleUpdateBook = async (book: Book) => {
         try {
             const response = await fetch(`api/book/${book.id}`, {
@@ -19,9 +24,13 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const responseData = await response.json();
+                if (responseData.errors) {
+                    setErrors(responseData.errors);
+                }
+                throw new Error(`Network response was not ok. Status: ${response.status}`);
             }
-            console.log(`Updated book with id: ${book.id}`);
+
             handleGetBooks(); // Refresh the book list
         } catch (err) {
             console.error('Failed to update book', err);
@@ -35,8 +44,20 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
                     if (book) {
                         handleUpdateBook(book);
                     }
+                    if (Object.keys(errors).length > 0 ) {
+                        setIsAddModalOpen(true);
+                    }
                 }}
             >
+                <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
+                    <div className="error-messages">
+                        {Object.entries(errors).map(([field, errorMessages]) => (
+                            <div key={field}>
+                                <strong>{field}:</strong> {(errorMessages as string[]).join(', ')}
+                            </div>
+                        ))}
+                    </div>
+                </Modal>
                 <label>
                     Title:
                     <input

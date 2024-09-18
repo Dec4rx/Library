@@ -7,7 +7,6 @@ import Modal from './Modal'; // Asegúrate de importar el componente Modal
 const Home: React.FC = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-    const [isAddingBook, setIsAddingBook] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -52,7 +51,11 @@ const Home: React.FC = () => {
     };
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="spinner-overlay">
+                <div className="spinner"></div>
+            </div>
+        );
     }
 
     return (
@@ -68,7 +71,7 @@ const Home: React.FC = () => {
             </Modal>
 
             <br />
-            
+
             <table>
                 <thead>
                     <tr>
