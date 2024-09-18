@@ -1,6 +1,7 @@
 import { BookInput } from '../types/Books';
 import { useState } from 'react';
 import Modal from './Modal';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface EditBookProps {
     handleGetBooks: () => Promise<void>;
@@ -13,6 +14,7 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
     const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 
     const handleAddBook = async (book: BookInput) => {
+        setErrors({});
         try {
             const response = await fetch('api/book', {
                 method: 'POST',
@@ -25,11 +27,13 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
             if (!response.ok) {
                 const responseData = await response.json();
                 if (responseData.errors) {
+                    console.log(responseData.errors);
                     setErrors(responseData.errors);
+                    setIsAddModalOpen(true);
                 }
                 throw new Error(`Network response was not ok. Status: ${await response.json()}`);
             }
-
+            toast.success('Book added successfully!'); // Show success message
             handleGetBooks(); // Refresh the book list
         } catch (err) {
             console.error('Failed to add book', err);
@@ -46,11 +50,21 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                     if (book) {
                         handleAddBook(book);
                     }
-                    if (Object.keys(errors).length > 0 ) {
-                        setIsAddModalOpen(true);
-                    }
                 }}
             >
+                <ToastContainer
+                    className="toast-container-custom"
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
+
                 <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
                     <div className="error-messages">
                         {Object.entries(errors).map(([field, errorMessages]) => (
@@ -89,7 +103,7 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                         placeholder="Isbn"
                         min={10}
                         max={13}
-                        value={book?.isbn}
+                        value={book?.isbn} // Add !! '' to avoid undefined error
                         onChange={(e) => setBook({ ...book!, isbn: e.target.value })}
                     />
                 </label>

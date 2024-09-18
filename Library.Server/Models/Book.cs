@@ -10,6 +10,7 @@ namespace Library.Server.Models
 
         [Required(ErrorMessage = "ISBN is required")]
         [StringLength(13, ErrorMessage = "The ISBN must not exceed 13 characters")]
+        [MinLength(10, ErrorMessage = "ISBN must have at least 10 characters")]
         [IsbnValidation(ErrorMessage = "ISBN must be a valid ISBN-10 or ISBN-13.")]
         public string Isbn { get; set; }
 
