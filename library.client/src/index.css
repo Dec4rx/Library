@@ -408,3 +408,12 @@ div.modal-content {
   font-weight: bold;
   color: #d32f2f; /* Darker red color for field names */
 }
+
+/* Agrega un contenedor personalizado para el ToastContainer */
+.toast-container-custom {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Asegúrate de que esté por encima de otros elementos */
+}
