@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Book, BookInput } from '../types/Books';
+import { Book } from '../types/Books';
 import EditBook from './EditBook';
 import AddBook from './AddBook';
+import Modal from './Modal'; // Asegúrate de importar el componente Modal
 
 const Home: React.FC = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-    const [addingBook, setAddingBook] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     const handleGetBooks = async () => {
@@ -16,19 +18,17 @@ const Home: React.FC = () => {
                 throw new Error('Network response was not ok');
             }
             const result: Book[] = await response.json();
-            console.log('Fetched books:', result); // Verifica la respuesta
             setBooks(result);
         } catch (err) {
             console.error('Failed to fetch books', err);
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         handleGetBooks();
     }, []);
-
 
     const handleDeleteBook = async (id: number) => {
         try {
@@ -39,74 +39,72 @@ const Home: React.FC = () => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            console.log(`Deleted book with id: ${id}`);
             handleGetBooks(); // Refresh the book list
         } catch (err) {
-            console.error('Failed to deleting books', err);
+            console.error('Failed to delete book', err);
         }
     };
 
     const handleSelectBook = (book: Book) => {
         setSelectedBook(book);
+        setIsEditModalOpen(true);
     };
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="spinner-overlay">
+                <div className="spinner"></div>
+            </div>
+        );
     }
 
     return (
         <div>
-            <div>
-                <h2>Book List</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>ISBN</th>
-                            <th>Genre</th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Year</th>
-                            <th>Description</th>
-                            <th>Pages</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {books.map((book) => (
-                            <tr key={book.id}>
-                                <td>{book.id}</td>
-                                <td>{book.isbn}</td>
-                                <td>{book.genre}</td>
-                                <td>{book.title}</td>
-                                <td>{book.author}</td>
-                                <td>{book.year}</td>
-                                <td>{book.description}</td>
-                                <td>{book.pages}</td>
-                                <td>
-                                    <button onClick={() => handleSelectBook(book)}>Edit</button>
-                                    <button onClick={() => handleDeleteBook(book.id)}>Delete</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <div>
+            <button onClick={() => setIsAddModalOpen(true)} className="primary">Add Book</button>
 
-                {/* <h2>{selectedBook && addingBook ? 'Edit Book' : 'Add Book'}</h2> */}
-                <h2>Edit Book</h2>
-                <EditBook handleGetBooks={handleGetBooks} bookState={[selectedBook, setSelectedBook]} />
-                {/* {!addingBook ? <button onClick={() => setAddingBook(!addingBook)}>+</button> : <></>} */}
+            <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+                {selectedBook && <EditBook handleGetBooks={handleGetBooks} bookState={[selectedBook, setSelectedBook]} />}
+            </Modal>
 
-                <h2>Add Book</h2>
+            <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
                 <AddBook handleGetBooks={handleGetBooks} />
-                {/* {selectedBook && addingBook ? 
-                <EditBook handleGetBooks={handleGetBooks} bookState={[selectedBook, setSelectedBook]} /> : 
-                addingBook && <AddBook handleGetBooks={handleGetBooks} />} */}
+            </Modal>
 
-                
-            </div>
+            <br />
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ISBN</th>
+                        <th>Genre</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Year</th>
+                        <th>Description</th>
+                        <th>Pages</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {books.map((book) => (
+                        <tr key={book.id}>
+                            <td>{book.id}</td>
+                            <td>{book.isbn}</td>
+                            <td>{book.genre}</td>
+                            <td>{book.title}</td>
+                            <td>{book.author}</td>
+                            <td>{book.year}</td>
+                            <td>{book.description}</td>
+                            <td>{book.pages}</td>
+                            <td>
+                                <button onClick={() => handleSelectBook(book)} className="primary">Edit</button>
+                                <button onClick={() => handleDeleteBook(book.id)} className="secondary">Delete</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };

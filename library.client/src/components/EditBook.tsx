@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import { Book } from '../types/Books';
+import Modal from './Modal';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface EditBookProps {
     handleGetBooks: () => Promise<void>;
@@ -8,7 +11,12 @@ interface EditBookProps {
 
 const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
     const [book, setBook] = bookState;
+
+    const [errors, setErrors] = useState<any>({});
+    const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+
     const handleUpdateBook = async (book: Book) => {
+        setErrors({});
         try {
             const response = await fetch(`api/book/${book.id}`, {
                 method: 'PUT',
@@ -19,9 +27,15 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const responseData = await response.json();
+                if (responseData.errors) {
+                    console.log(responseData.errors);
+                    setErrors(responseData.errors);
+                    setIsAddModalOpen(true);
+                }
+                throw new Error(`Network response was not ok. Status: ${response.status}`);
             }
-            console.log(`Updated book with id: ${book.id}`);
+            toast.success('Book updated successfully!'); // Show success message
             handleGetBooks(); // Refresh the book list
         } catch (err) {
             console.error('Failed to update book', err);
@@ -29,6 +43,18 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
     };
     return (
         <div>
+            <ToastContainer
+                className="toast-container-custom"
+                 position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -37,6 +63,17 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
                     }
                 }}
             >
+
+
+                <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
+                    <div className="error-messages">
+                        {Object.entries(errors).map(([field, errorMessages]) => (
+                            <div key={field}>
+                                <strong>{field}:</strong> {(errorMessages as string[]).join(', ')}
+                            </div>
+                        ))}
+                    </div>
+                </Modal>
                 <label>
                     Title:
                     <input
@@ -66,7 +103,7 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
                         placeholder="Isbn"
                         min={10}
                         max={13}
-                        value={book?.isbn}
+                        value={book?.isbn || ''}
                         onChange={(e) => setBook({ ...book!, isbn: e.target.value })}
                     />
                 </label>
@@ -111,7 +148,7 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
                         onChange={(e) => setBook({ ...book!, pages: Number(e.target.value) })}
                     />
                 </label>
-                <button type="submit">Update</button>
+                <button type="submit" className="primary">Update</button>
             </form>
         </div>
     );

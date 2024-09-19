@@ -1,5 +1,7 @@
 import { BookInput } from '../types/Books';
 import { useState } from 'react';
+import Modal from './Modal';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface EditBookProps {
     handleGetBooks: () => Promise<void>;
@@ -8,9 +10,11 @@ interface EditBookProps {
 
 const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
     const [book, setBook] = useState<BookInput>();
-    
+    const [errors, setErrors] = useState<any>({});
+    const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+
     const handleAddBook = async (book: BookInput) => {
-        console.log('Adding new book:', book);
+        setErrors({});
         try {
             const response = await fetch('api/book', {
                 method: 'POST',
@@ -18,17 +22,24 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(book),
-            }).then((response) => response.json());
+            });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const responseData = await response.json();
+                if (responseData.errors) {
+                    console.log(responseData.errors);
+                    setErrors(responseData.errors);
+                    setIsAddModalOpen(true);
+                }
+                throw new Error(`Network response was not ok. Status: ${await response.json()}`);
             }
-            console.log('Added new book');
+            toast.success('Book added successfully!'); // Show success message
             handleGetBooks(); // Refresh the book list
         } catch (err) {
             console.error('Failed to add book', err);
         }
     };
+
 
 
     return (
@@ -41,7 +52,29 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                     }
                 }}
             >
-                 <label>
+                <ToastContainer
+                    className="toast-container-custom"
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
+
+                <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
+                    <div className="error-messages">
+                        {Object.entries(errors).map(([field, errorMessages]) => (
+                            <div key={field}>
+                                <strong>{field}:</strong> {(errorMessages as string[]).join(', ')}
+                            </div>
+                        ))}
+                    </div>
+                </Modal>
+                <label>
                     Title:
                     <input
                         type="text"
@@ -70,7 +103,7 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                         placeholder="Isbn"
                         min={10}
                         max={13}
-                        value={book?.isbn}
+                        value={book?.isbn} // Add !! '' to avoid undefined error
                         onChange={(e) => setBook({ ...book!, isbn: e.target.value })}
                     />
                 </label>
@@ -115,7 +148,7 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
                         onChange={(e) => setBook({ ...book!, pages: Number(e.target.value) })}
                     />
                 </label>
-                <button type="submit">Add</button>
+                <button type="submit" className="primary">Add</button>
             </form>
         </div>
     );
