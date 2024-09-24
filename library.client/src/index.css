@@ -418,3 +418,7 @@ div.modal-content {
   z-index: 9999;/* Make sure it is above other elements */
   width: auto;
 }
+
+td {
+  white-space: normal;
+}
