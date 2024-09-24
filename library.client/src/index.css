@@ -113,6 +113,10 @@ h2 {
   margin-bottom: 20px;
   font-size: 24px;
 }
+h1 {
+  padding-bottom: 5px;
+  border-bottom: 2px solid #ddd;
+}
 
 .edit-book, .add-book {
   margin-bottom: 20px;
@@ -419,6 +423,45 @@ div.modal-content {
   width: auto;
 }
 
-td {
-  white-space: normal;
+/* Forms Style */
+.form-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 95vh; /* Limita la altura máxima a 80% de la pantalla */
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.label-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.input-form {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.not-found {
+  
 }
