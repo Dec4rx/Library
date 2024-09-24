@@ -1,16 +1,12 @@
 
-import { Link, Outlet } from 'react-router-dom';
-import React, { useState } from 'react';
-
-interface NavBarProps {
-  brandName: string;
-  imageSrcPath: string;
-  navItems: { name: string; path: string; icon: string }[]; // Actualiza el tipo
-}
+import { Outlet } from 'react-router-dom';
+import React from 'react';
 
 
-const NavBar: React.FC<NavBarProps> = ({ brandName, imageSrcPath, navItems }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+
+
+const NavBar: React.FC = () => {
+
   return (
     <main className="container my-5">
 

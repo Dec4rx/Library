@@ -9,6 +9,9 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import imagePath from "./assets/logo.jpg";
 import Home from "./components/Home";
 import Layout from "./components/Layout";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import NoPage from "./components/NoPage";
 
 function App() {
     const items = [
