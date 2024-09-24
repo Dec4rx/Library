@@ -10,7 +10,7 @@ const Layout: React.FC = () => {
           <h1 className="display-4">Digital Library</h1>
         </div>
       </header>
-      <main className="flex-grow-1">
+      <main className="">
         <div className="container my-5">
           <Outlet />
         </div>

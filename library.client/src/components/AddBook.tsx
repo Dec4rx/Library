@@ -3,12 +3,11 @@ import { useState } from 'react';
 import Modal from './Modal';
 import { toast, ToastContainer } from 'react-toastify';
 
-interface EditBookProps {
+interface AddBookProps {
     handleGetBooks: () => Promise<void>;
 }
 
-
-const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
+const AddBook: React.FC<AddBookProps> = ({ handleGetBooks }) => {
     const [book, setBook] = useState<BookInput>();
     const [errors, setErrors] = useState<any>({});
     const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
@@ -37,10 +36,9 @@ const AddBook: React.FC<EditBookProps> = ({ handleGetBooks }) => {
             handleGetBooks(); // Refresh the book list
         } catch (err) {
             console.error('Failed to add book', err);
+            toast.error('Failed to add book. Please try again.'); // Show error message
         }
     };
-
-
 
     return (
         <div>

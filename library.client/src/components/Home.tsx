@@ -60,7 +60,10 @@ const Home: React.FC = () => {
 
     return (
         <div>
-            <button onClick={() => setIsAddModalOpen(true)} className="primary">Add Book</button>
+            <button onClick={() => setIsAddModalOpen(true)} className="primary">
+                <i className="fa-solid fa-circle-plus" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>
+                Add Book
+            </button>
 
             <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
                 {selectedBook && <EditBook handleGetBooks={handleGetBooks} bookState={[selectedBook, setSelectedBook]} />}
@@ -98,8 +101,14 @@ const Home: React.FC = () => {
                             <td>{book.description}</td>
                             <td>{book.pages}</td>
                             <td>
-                                <button onClick={() => handleSelectBook(book)} className="primary">Edit</button>
-                                <button onClick={() => handleDeleteBook(book.id)} className="secondary">Delete</button>
+                                <button onClick={() => handleSelectBook(book)} className="primary">
+                                    <i className="fa-solid fa-pen-to-square" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>
+                                    Edit
+                                </button>
+                                <button onClick={() => handleDeleteBook(book.id)} className="secondary">
+                                    <i className="fa-solid fa-trash-can" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}
