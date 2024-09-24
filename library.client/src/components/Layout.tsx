@@ -5,7 +5,9 @@ import React from 'react';
 
 
 
+
 const NavBar: React.FC = () => {
+
 
   return (
     <main className="container my-5">

@@ -90,32 +90,24 @@ const Home: React.FC = () => {
             <table>
                 <thead>
                     <tr>
-                        {/* <th>ID</th> */}
                         <th>ISBN</th>
-                        {/* <th>Genre</th> */}
                         <th>Title</th>
                         <th>Author</th>
-                        {/* <th>Year</th> */}
                         <th>Description</th>
-                        {/* <th>Pages</th> */}
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {books.map((book) => (
                         <tr key={book.id}>
-                            {/* <td>{book.id}</td> */}
                             <td>{book.isbn}</td>
-                            {/* <td>{book.genre}</td> */}
                             <td>{book.title}</td>
                             <td>{book.author}</td>
-                            {/* <td>{book.year}</td> */}
                             <td>{book.description}</td>
-                            {/* <td>{book.pages}</td> */}
                             <td>
                                 <button onClick={() => handleOnSeeMore(book)} className="secondary"> {/*TODO more info  */}
                                     <i className="fa-solid fa-info-circle" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>
-                                    More..
+                                    More...
                                 </button>
                                 <button onClick={() => handleSelectBook(book)} className="primary">
                                     <i className="fa-solid fa-pen-to-square" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>

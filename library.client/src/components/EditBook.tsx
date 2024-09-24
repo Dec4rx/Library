@@ -63,6 +63,7 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
                     }
                 }}
             >
+                <h1>Editing Book</h1>
                 <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
                     <div className="error-messages">
                         {Object.entries(errors).map(([field, errorMessages]) => (

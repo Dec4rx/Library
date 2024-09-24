@@ -62,7 +62,7 @@ const AddBook: React.FC<AddBookProps> = ({ handleGetBooks }) => {
                     draggable
                     pauseOnHover
                 />
-
+                <h1>Adding Book</h1>
                 <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
                     <div className="error-messages">
                         {Object.entries(errors).map(([field, errorMessages]) => (

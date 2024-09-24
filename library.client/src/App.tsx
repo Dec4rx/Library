@@ -15,7 +15,9 @@ import NoPage from "./components/NoPage";
 
 function App() {
     const items = [
-      { name: "Home", path: "/", icon: "fas fa-home" },
+        { name: "Home", path: "/", icon: "fas fa-home" },
+        { name: "Register", path: "/register", icon: "fas fa-user-plus" },
+        { name: "Login", path: "/login", icon: "fas fa-sign-in-alt" },
     ];
   
     return (
@@ -30,7 +32,6 @@ function App() {
             </Route>
         </Routes>
       </Router>
-
     );
   }
 
