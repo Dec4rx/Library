@@ -8,10 +8,8 @@ interface EditBookProps {
     bookState: [Book | null, React.Dispatch<React.SetStateAction<Book | null>>];
 }
 
-
 const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
     const [book, setBook] = bookState;
-
     const [errors, setErrors] = useState<any>({});
     const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 
@@ -39,13 +37,15 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
             handleGetBooks(); // Refresh the book list
         } catch (err) {
             console.error('Failed to update book', err);
+            toast.error('Failed to update book. Please try again.'); // Show error message
         }
     };
+
     return (
         <div>
             <ToastContainer
                 className="toast-container-custom"
-                 position="top-right"
+                position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
                 newestOnTop={false}
@@ -63,8 +63,6 @@ const EditBook: React.FC<EditBookProps> = ({ handleGetBooks, bookState }) => {
                     }
                 }}
             >
-
-
                 <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
                     <div className="error-messages">
                         {Object.entries(errors).map(([field, errorMessages]) => (

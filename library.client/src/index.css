@@ -23,6 +23,7 @@ div {
 }
 
 header .container, footer .container {
+  margin-top: 2rem;
   background-color: #000000;
   color: #ddd;
 }

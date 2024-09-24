@@ -3,11 +3,14 @@ import { Book } from '../types/Books';
 import EditBook from './EditBook';
 import AddBook from './AddBook';
 import Modal from './Modal'; // Asegúrate de importar el componente Modal
+import FullBook from './FullBook';
 
 const Home: React.FC = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+    const [selectedFullBook, setSelectedFullBook] = useState<Book | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isSeeMoreModalOpen, setIsSeeMoreModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -50,6 +53,11 @@ const Home: React.FC = () => {
         setIsEditModalOpen(true);
     };
 
+    const handleOnSeeMore = (book: Book) => {
+        setSelectedFullBook(book);
+        setIsSeeMoreModalOpen(true);
+    }
+
     if (isLoading) {
         return (
             <div className="spinner-overlay">
@@ -60,7 +68,14 @@ const Home: React.FC = () => {
 
     return (
         <div>
-            <button onClick={() => setIsAddModalOpen(true)} className="primary">Add Book</button>
+            <button onClick={() => setIsAddModalOpen(true)} className="primary">
+                <i className="fa-solid fa-circle-plus" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>
+                Add Book
+            </button>
+
+            <Modal isOpen={isSeeMoreModalOpen} onClose={() => setIsSeeMoreModalOpen(false)}>
+                { selectedFullBook && <FullBook book={selectedFullBook} /> }
+            </Modal>
 
             <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
                 {selectedBook && <EditBook handleGetBooks={handleGetBooks} bookState={[selectedBook, setSelectedBook]} />}
@@ -75,31 +90,41 @@ const Home: React.FC = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        {/* <th>ID</th> */}
                         <th>ISBN</th>
-                        <th>Genre</th>
+                        {/* <th>Genre</th> */}
                         <th>Title</th>
                         <th>Author</th>
-                        <th>Year</th>
+                        {/* <th>Year</th> */}
                         <th>Description</th>
-                        <th>Pages</th>
+                        {/* <th>Pages</th> */}
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {books.map((book) => (
                         <tr key={book.id}>
-                            <td>{book.id}</td>
+                            {/* <td>{book.id}</td> */}
                             <td>{book.isbn}</td>
-                            <td>{book.genre}</td>
+                            {/* <td>{book.genre}</td> */}
                             <td>{book.title}</td>
                             <td>{book.author}</td>
-                            <td>{book.year}</td>
+                            {/* <td>{book.year}</td> */}
                             <td>{book.description}</td>
-                            <td>{book.pages}</td>
+                            {/* <td>{book.pages}</td> */}
                             <td>
-                                <button onClick={() => handleSelectBook(book)} className="primary">Edit</button>
-                                <button onClick={() => handleDeleteBook(book.id)} className="secondary">Delete</button>
+                                <button onClick={() => handleOnSeeMore(book)} className="secondary"> {/*TODO more info  */}
+                                    <i className="fa-solid fa-info-circle" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>
+                                    More..
+                                </button>
+                                <button onClick={() => handleSelectBook(book)} className="primary">
+                                    <i className="fa-solid fa-pen-to-square" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>
+                                    Edit
+                                </button>
+                                <button onClick={() => handleDeleteBook(book.id)} className="secondary">
+                                    <i className="fa-solid fa-trash-can" style={{ marginRight: '8px', fontSize: '1.5em' }}></i>
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}
