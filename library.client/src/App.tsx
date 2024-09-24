@@ -7,6 +7,9 @@ import NavBar from "./components/Layout";
 import Home from "./components/Home";
 import imagePath from "./assets/logo.jpg";
 import './App.css';
+import Register from "./components/Register";
+import Login from "./components/Login";
+import NoPage from "./components/NoPage";
 
 const App = () => {
     const items = [
@@ -17,10 +20,13 @@ const App = () => {
 
     return (
         <Router>
+              <NavBar brandName="Library" imageSrcPath={imagePath} navItems={items} />
             <Routes>
-                <Route path="/" element={<NavBar brandName="Library" imageSrcPath={imagePath} navItems={items} />}>
+                <Route path="/">
                     <Route index element={<Home />} />
-                    {/*<Route path="*" element={<NoPage />} /> //TODO Implement */}
+                    <Route path="register" element={<Register />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="*" element={<NoPage />} /> //TODO Implement
                 </Route>
             </Routes>
         </Router>

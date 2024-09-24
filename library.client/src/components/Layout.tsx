@@ -12,7 +12,7 @@ interface NavBarProps {
 const NavBar: React.FC<NavBarProps> = ({ brandName, imageSrcPath, navItems }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   return (
-    <div>
+    <div className="container-fluid">
       <nav className="navbar navbar-expand-md navbar-light bg-white shadow">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
@@ -70,9 +70,9 @@ const NavBar: React.FC<NavBarProps> = ({ brandName, imageSrcPath, navItems }) =>
       </nav>
 
       <main className="flex-grow-1">
-        <div className="container my-5">
-          <Outlet />
-        </div>
+
+        <Outlet />
+
       </main>
     </div>
   );
