@@ -425,7 +425,7 @@ div.modal-content {
 
 /* Forms Style */
 .form-container {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   right: 0;
@@ -436,14 +436,14 @@ div.modal-content {
 }
 
 .form-content {
-  background: #fff;
+  /* background: #fff; */
   padding: 20px;
   border-radius: 8px;
   width: 100%;
   max-width: 600px;
   max-height: 95vh; /* Limita la altura máxima a 80% de la pantalla */
   position: relative;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
 }
 
 .label-form {
@@ -462,6 +462,12 @@ div.modal-content {
   border-radius: 5px;
 }
 
-.not-found {
-  
+td {
+  white-space: normal;
+  text-align: justify;
+}
+
+.full-book{
+  padding: 20px;
+  text-align: justify;
 }

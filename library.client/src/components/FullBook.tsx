@@ -7,23 +7,21 @@ interface BookProps {
 
 const FullBook: React.FC<BookProps> = ({ book }) => {
     return (
-        <div>
-            <strong>Title:</strong> 
-            <p>{book.title}</p>
-            <strong>Author:</strong> 
-            <p>{book.author}</p>
-            <strong>Summary:</strong> 
-            <p>{book.description}</p>
-            <strong>Genre:</strong> 
-            <p>{book.genre}</p>
-            <strong>ISBN:</strong> 
-            <p>{book.isbn}</p>
-            <strong>ISBN:</strong> 
-            <p>{book.isbn}</p>
-            <strong>ISBN:</strong> 
-            <p>{book.pages}</p>
-            <strong>Published Date:</strong> 
-            <p>{book.year}</p>
+        <div className='full-book'>
+                <h1>{book.title}</h1>
+                <strong>Author:</strong>
+                <p>{book.author}</p>
+                <strong>Summary:</strong>
+                <p>{book.description}</p>
+                <strong>Genre:</strong>
+                <p>{book.genre}</p>
+                <strong>Pages:</strong>
+                <p>{book.pages}</p>
+                <strong>Published Date:</strong>
+                <p>{book.year}</p>
+                <strong>ISBN:</strong>
+                <p>{book.isbn}</p>
+            
         </div>
     );
 };
